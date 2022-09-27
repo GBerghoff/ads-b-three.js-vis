@@ -14,7 +14,7 @@ export function initialize(containerName: string) {
 
     camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 10);
 
-    camera.position.z = 5;
+    camera.position.z = 10;
 
     scene = new THREE.Scene();
 
@@ -22,6 +22,15 @@ export function initialize(containerName: string) {
     renderer.setSize(containerBoundingBox.width, containerBoundingBox.height);
     container.appendChild(renderer.domElement);
   }
+}
+
+export function createWorld(radius: number, hSegments: number, vSegments: number, materialPath: string) {
+  const geometry = new THREE.SphereGeometry(radius, hSegments, vSegments);
+  const material = new THREE.MeshBasicMaterial({
+    map: new THREE.TextureLoader().load(materialPath)
+  });
+
+  return new THREE.Mesh(geometry, material);
 }
 
 export function createBox(width: number, height: number, depth: number, color: { color: any }): THREE.Mesh {
@@ -44,4 +53,13 @@ export function animateMesh(mesh: THREE.Mesh | any): any {
 
 export function addMeshToScene(mesh: any) {
   scene.add(mesh);
+}
+
+export function addMultipleMeshToScene(meshs: any[]) {
+  if(Array.isArray(meshs)) {
+    meshs.forEach(mesh => {
+      mesh.position.y = 6 // This is just here to test the cube offset
+      scene.add(mesh)
+    });
+  }
 }
