@@ -1,5 +1,13 @@
-<script setup lang="ts">
-import Globe from "./components/Globe.vue";</script>
+<script lang="ts">
+import { defineComponent } from "vue";
+import Globe from "./components/Globe.vue";
+
+export default defineComponent({
+  components: {
+    Globe,
+  },
+});
+</script>
 
 <template>
   <Globe />
@@ -14,8 +22,5 @@ body {
 }
 body {
   margin: 0px;
-}
-#app {
-  height: 100%;
 }
 </style>
