@@ -15,8 +15,12 @@ export function initialize(containerName: string) {
     camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 10);
 
     camera.position.z = 10;
+    camera.position.x = 5;
 
     scene = new THREE.Scene();
+
+    const axesHelper = new THREE.AxesHelper( 50 )
+    scene.add(axesHelper)
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(containerBoundingBox.width, containerBoundingBox.height);
