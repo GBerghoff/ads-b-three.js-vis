@@ -6,9 +6,8 @@ export default {
     initialize("container");
     const cube = createBox(1, 1, 1, { color: 0x00ff00 });
     const earth = createWorld(5, 50, 50, './assets/8k_earth_nightmap.jpg');
-    addMeshToScene(earth);
-    addMultipleMeshToScene([cube]);
-    animateMesh(cube);
+    // addMeshToScene(earth);
+    addMultipleMeshToScene([cube, earth]);
   },
 };
 </script>

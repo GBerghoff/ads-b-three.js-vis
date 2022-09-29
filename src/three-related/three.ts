@@ -1,8 +1,10 @@
 import * as THREE from "three";
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 let renderer: THREE.WebGLRenderer;
 let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
+let controls: any;
 
 export function initialize(containerName: string) {
   let container = document.getElementById(containerName);
@@ -15,7 +17,6 @@ export function initialize(containerName: string) {
     camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 10);
 
     camera.position.z = 10;
-    camera.position.x = 5;
 
     scene = new THREE.Scene();
 
@@ -25,6 +26,8 @@ export function initialize(containerName: string) {
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(containerBoundingBox.width, containerBoundingBox.height);
     container.appendChild(renderer.domElement);
+
+    controls = new OrbitControls(camera, renderer.domElement);
   }
 }
 
@@ -50,7 +53,7 @@ export function animateMesh(mesh: THREE.Mesh | any): any {
       mesh.rotateX(0.01);
       mesh.rotateY(0.01);
     }
-    renderer.render(scene, camera);
+    render();
   }
   animate();
 }
@@ -59,10 +62,14 @@ export function addMeshToScene(mesh: any) {
   scene.add(mesh);
 }
 
+function render() {
+  controls.update();
+  renderer.render(scene, camera);
+}
+
 export function addMultipleMeshToScene(meshs: any[]) {
   if(Array.isArray(meshs)) {
     meshs.forEach(mesh => {
-      mesh.position.y = 6 // This is just here to test the cube offset
       scene.add(mesh)
     });
   }
