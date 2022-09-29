@@ -14,7 +14,7 @@ export function initialize(containerName: string) {
     console.log(container.clientHeight, container.clientWidth);
     console.log(containerBoundingBox.height, containerBoundingBox.width);
 
-    camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 10);
+    camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 100);
 
     camera.position.z = 10;
 
@@ -53,6 +53,14 @@ export function animateMesh(mesh: THREE.Mesh | any): any {
       mesh.rotateX(0.01);
       mesh.rotateY(0.01);
     }
+    render();
+  }
+  animate();
+}
+
+export function animate(): any {
+  function animate() {
+    requestAnimationFrame(animate);
     render();
   }
   animate();
