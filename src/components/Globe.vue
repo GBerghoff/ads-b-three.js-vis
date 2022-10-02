@@ -1,12 +1,12 @@
 <script lang="ts">
-import { initialize, addMeshToScene, animateMesh, createBox } from "../three-related/three";
+import { initialize, addMeshToScene, animate, animateMesh, createBox, createWorld, addMultipleMeshToScene } from "../three-related/three";
 
 export default {
   mounted() {
     initialize("container");
-    const cube = createBox(1, 1, 1, { color: 0x00ff00 });
-    addMeshToScene(cube);
-    animateMesh(cube);
+    const earth = createWorld(5, 50, 50, './assets/8k_earth_nightmap.jpg');
+    addMultipleMeshToScene([earth]);
+    animate();
   },
 };
 </script>
@@ -19,6 +19,5 @@ export default {
 #container {
   height: 1000px;
   width: 100%;
-  border: 1px solid red;
 }
 </style>
