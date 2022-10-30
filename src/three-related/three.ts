@@ -1,3 +1,4 @@
+import { Vector3 } from "three";
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
@@ -20,7 +21,7 @@ export function initialize(containerName: string) {
 
     scene = new THREE.Scene();
 
-    const axesHelper = new THREE.AxesHelper( 50 )
+    const axesHelper = new THREE.AxesHelper(50)
     scene.add(axesHelper)
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -76,7 +77,7 @@ function render() {
 }
 
 export function addMultipleMeshToScene(meshs: any[]) {
-  if(Array.isArray(meshs)) {
+  if (Array.isArray(meshs)) {
     meshs.forEach(mesh => {
       scene.add(mesh)
     });
@@ -84,9 +85,30 @@ export function addMultipleMeshToScene(meshs: any[]) {
 }
 
 
-window.addEventListener( 'resize', onWindowResize, false );
-function onWindowResize(){
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize( window.innerWidth, window.innerHeight );
+export function createCustomBox(width: number, height: number, depth: number, color: { color: any }, positionVector: Vector3): THREE.Mesh {
+  const geometry = new THREE.BoxGeometry(width, height, depth);
+  const material = new THREE.MeshBasicMaterial(color);
+
+  let obj = new THREE.Mesh(geometry, material);
+  obj.position.set(positionVector.x, positionVector.y, positionVector.z);
+  return obj;
+}
+
+export function calcPosFromLatLonRad(radius: any, lat: any, lon: any) {
+
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lon + 180) * (Math.PI / 180);
+
+  const x = -(radius * Math.sin(phi) * Math.cos(theta));
+  const z = (radius * Math.sin(phi) * Math.sin(theta));
+  const y = (radius * Math.cos(phi));
+
+  return new Vector3(x, y, z);
+}
+
+window.addEventListener('resize', onWindowResize, false);
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
