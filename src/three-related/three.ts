@@ -24,8 +24,8 @@ export function initialize(containerName: string) {
 
     scene = new THREE.Scene();
 
-    const axesHelper = new THREE.AxesHelper(50);
-    scene.add(axesHelper);
+    // const axesHelper = new THREE.AxesHelper(50);
+    // scene.add(axesHelper);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(containerBoundingBox.width, containerBoundingBox.height);
@@ -107,15 +107,39 @@ export function createCustomBox(
   return obj;
 }
 
-export function calcPosFromLatLonRad(radius: any, lat: any, lon: any) {
+export function calcPosFromLatLon(lat: any, lon: any) {
+  let sphereRadius = 5;
+
   const phi = (90 - lat) * (Math.PI / 180);
   const theta = (lon + 180) * (Math.PI / 180);
 
-  const x = -(radius * Math.sin(phi) * Math.cos(theta));
-  const z = radius * Math.sin(phi) * Math.sin(theta);
-  const y = radius * Math.cos(phi);
+  const x = -(sphereRadius * Math.sin(phi) * Math.cos(theta));
+  const z = sphereRadius * Math.sin(phi) * Math.sin(theta);
+  const y = sphereRadius * Math.cos(phi);
 
   return new Vector3(x, y, z);
+}
+
+export function radToDeg(radians: number) {
+  return radians * (180 / Math.PI);
+}
+
+export function vector3toLatLon(position: Vector3) {
+  let sphereRadius = 5;
+  let lat = -radToDeg(Math.acos(position.y / sphereRadius)) + 90; //theta
+
+  if (lat > 90) {
+    lat -= 180;
+  }
+
+  let lon;
+  if (position.z >= 0) lon = radToDeg(Math.atan(position.x / position.z)) - 90; //phi
+  else lon = radToDeg(Math.atan(position.x / position.z)) + 90;
+
+  if (lon < -180) {
+    lon += 360;
+  }
+  return [lat, lon];
 }
 
 function handlePointerMove(event: any) {
@@ -124,6 +148,13 @@ function handlePointerMove(event: any) {
 
   pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
   pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(pointer, camera);
+  const intersects = raycaster.intersectObjects(scene.children);
+
+  if (intersects.length > 0) {
+    console.log(vector3toLatLon(intersects[0].point));
+  }
 
   const hudStore = useHudStore();
   hudStore.x = pointer.x;
