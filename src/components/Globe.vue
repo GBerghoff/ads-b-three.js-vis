@@ -6,7 +6,7 @@ export default {
   mounted() {
     initialize("container");
     const earth = createWorld(5, 50, 50, './assets/01-3.jpg');
-    const testBox = createCustomBox(.05, .05, .05, {color: new THREE.Color( 'skyblue' )}, calcPosFromLatLon(-37.8136, 144.9631))
+    const testBox = createCustomBox(.05, .05, .05, {color: new THREE.Color( 'skyblue' )}, calcPosFromLatLon({lat: -37.8136, lon: 144.9631}))
     addMultipleMeshToScene([earth]);
     addMultipleMeshToScene([testBox]);
     animate();

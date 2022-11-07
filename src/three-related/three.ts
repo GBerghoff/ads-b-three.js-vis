@@ -2,6 +2,7 @@ import { Vector3 } from "three";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { useHudStore } from "@/stores/hudStore";
+import type { LatLon } from "@/interfaces/latlon";
 
 let renderer: THREE.WebGLRenderer;
 let scene: THREE.Scene;
@@ -9,6 +10,10 @@ let camera: THREE.PerspectiveCamera;
 let controls: any;
 let raycaster: THREE.Raycaster;
 let pointer: THREE.Vector2;
+
+// Event listeners
+window.addEventListener("pointermove", onPointerMove);
+window.addEventListener("resize", onWindowResize, false);
 
 export function initialize(containerName: string) {
   let container = document.getElementById(containerName);
@@ -73,14 +78,14 @@ export function animate(): any {
   animate();
 }
 
-export function addMeshToScene(mesh: any) {
-  scene.add(mesh);
-}
-
 function render() {
   controls.update();
   raycaster.setFromCamera(pointer, camera);
   renderer.render(scene, camera);
+}
+
+export function addMeshToScene(mesh: any) {
+  scene.add(mesh);
 }
 
 export function addMultipleMeshToScene(meshs: any[]) {
@@ -107,11 +112,11 @@ export function createCustomBox(
   return obj;
 }
 
-export function calcPosFromLatLon(lat: any, lon: any) {
+export function calcPosFromLatLon(latLon: LatLon): Vector3 {
   let sphereRadius = 5;
 
-  const phi = (90 - lat) * (Math.PI / 180);
-  const theta = (lon + 180) * (Math.PI / 180);
+  const phi = (90 - latLon.lat) * (Math.PI / 180);
+  const theta = (latLon.lon + 180) * (Math.PI / 180);
 
   const x = -(sphereRadius * Math.sin(phi) * Math.cos(theta));
   const z = sphereRadius * Math.sin(phi) * Math.sin(theta);
@@ -120,11 +125,11 @@ export function calcPosFromLatLon(lat: any, lon: any) {
   return new Vector3(x, y, z);
 }
 
-export function radToDeg(radians: number) {
+export function radToDeg(radians: number): number {
   return radians * (180 / Math.PI);
 }
 
-export function vector3toLatLon(position: Vector3) {
+export function vector3toLatLon(position: Vector3): LatLon {
   let sphereRadius = 5;
   let lat = -radToDeg(Math.acos(position.y / sphereRadius)) + 90; //theta
 
@@ -139,10 +144,10 @@ export function vector3toLatLon(position: Vector3) {
   if (lon < -180) {
     lon += 360;
   }
-  return [lat, lon];
+  return {lat: lat, lon: lon };
 }
 
-function handlePointerMove(event: any) {
+function onPointerMove(event: any) {
   // calculate pointer position in normalized device coordinates
   // (-1 to +1) for both components
 
@@ -161,9 +166,6 @@ function handlePointerMove(event: any) {
   hudStore.y = pointer.y;
 }
 
-window.addEventListener("pointermove", handlePointerMove);
-
-window.addEventListener("resize", onWindowResize, false);
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
