@@ -107,7 +107,7 @@ export function createCustomBox(
   const material = new THREE.MeshBasicMaterial(color);
 
   let obj = new THREE.Mesh(geometry, material);
-  console.log(positionVector);
+  // console.log(positionVector);
   obj.position.set(positionVector.x, positionVector.y, positionVector.z);
   return obj;
 }
@@ -144,10 +144,15 @@ export function vector3toLatLon(position: Vector3): LatLon {
   if (lon < -180) {
     lon += 360;
   }
-  return {lat: lat, lon: lon };
+  return { lat: lat, lon: lon };
+}
+
+export function resetCameraPosition() {
+  controls.reset();
 }
 
 function onPointerMove(event: any) {
+  const hudStore = useHudStore();
   // calculate pointer position in normalized device coordinates
   // (-1 to +1) for both components
 
@@ -158,12 +163,10 @@ function onPointerMove(event: any) {
   const intersects = raycaster.intersectObjects(scene.children);
 
   if (intersects.length > 0) {
-    console.log(vector3toLatLon(intersects[0].point));
+    const coords = vector3toLatLon(intersects[0].point);
+    hudStore.lat = coords.lat;
+    hudStore.lon = coords.lon;
   }
-
-  const hudStore = useHudStore();
-  hudStore.x = pointer.x;
-  hudStore.y = pointer.y;
 }
 
 function onWindowResize() {
