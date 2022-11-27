@@ -1,14 +1,14 @@
 import { defineStore } from "pinia";
 
 interface State {
-  x: number;
-  y: number;
+  lat: number;
+  lon: number;
 }
 
 export const useHudStore = defineStore("hud", {
   state: (): State => ({
-    x: 0,
-    y: 0,
+    lat: 0,
+    lon: 0,
   }),
   getters: {},
   actions: {},
