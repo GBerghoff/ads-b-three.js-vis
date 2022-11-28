@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     formatPosition(position: number): number {
-      return Math.round(position * 10000) / 100000;
+      return Math.round(position * 100000) / 100000;
     },
   },
 };

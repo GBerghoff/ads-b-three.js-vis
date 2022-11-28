@@ -21,5 +21,6 @@ export default {
 .hud__controls {
   position: absolute;
   left: 1rem;
+  top: 6rem;
 }
 </style>
