@@ -1,26 +1,19 @@
 <template>
-  <div class="hud-container">
-    <p>Latitude: {{ hudStore.x }}</p>
-    <p>Longitude: {{ hudStore.y }}</p>
-  </div>
+  <coordinateHud />
+  <controlsHud />
 </template>
 
 <script lang="ts">
-import { useHudStore } from "@/stores/hudStore";
+import CoordinateHud from "./CoordinateHud.vue";
+import ControlsHud from "./ControlsHud.vue";
 
 export default {
   name: "hud",
-  setup() {
-    return {
-      hudStore: useHudStore(),
-    };
+  components: {
+    coordinateHud: CoordinateHud,
+    controlsHud: ControlsHud,
   },
 };
 </script>
 
-<style>
-.hud-container {
-  position: absolute;
-  background-color: white;
-}
-</style>
+<style></style>
